@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
-// import { Redirect } from 'react-router-dom'
+import { connect } from 'react-redux';
 
 import AppIcon from '../../assets/image/icon.png';
 import Grid from '@material-ui/core/Grid';
@@ -10,36 +9,18 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+import * as actions from '../../store/actions/index';
+
 import useStyles from './styles';
 
-const Login = () => {
+const Login = ({ onLogin, errors, loading, isAuthenticated }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [errors, setErrors] = useState({});
-    const [authenticated, setAuthenticated] = useState(false);
     const classes = useStyles();
 
     const submitHandler = (e) => {
         e.preventDefault();
-        setLoading(true);
-
-        const userData = {
-            email: email,
-            password: password
-        };
-
-        axios
-            .post('/login', userData)
-            .then((res) => {
-                console.log(res.data);
-                setLoading(false);
-                setAuthenticated(true);
-            })
-            .catch((err) => {
-                setErrors(err.response.data);
-                setLoading(false);
-            });
+        onLogin(email, password);
     };
 
     let submit = (
@@ -56,10 +37,9 @@ const Login = () => {
         submit = <CircularProgress className={classes.spinner} size={30} />;
     }
     let authRedirect = null;
-    if (authenticated) {
+    if (isAuthenticated) {
         authRedirect = <Redirect to="/" />;
     }
-
     return (
         <Grid className={classes.container} container>
             {authRedirect}
@@ -115,9 +95,19 @@ const Login = () => {
     );
 };
 
-export default Login;
+const mapStateToProps = (state) => {
+    return {
+        errors: state.errorData,
+        loading: state.loading,
+        isAuthenticated: state.token !== null
+    };
+};
 
-// {
-//     "tabWidth": 4,
-//     "singleQuote": true
-// }
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onLogin: (email, password) =>
+            dispatch(actions.userLogin(email, password))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

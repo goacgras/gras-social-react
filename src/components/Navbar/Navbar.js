@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
 import ToolBar from '@material-ui/core/Toolbar';
@@ -20,6 +20,7 @@ const Navbar = () => {
                 <Button color="inherit" component={Link} to="/signup">
                     Signup
                 </Button>
+                <NavLink to="/logout">Logout</NavLink>
             </ToolBar>
         </AppBar>
     );
