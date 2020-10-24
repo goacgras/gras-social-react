@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import * as actions from '../../store/actions/index';
 
 import AppIcon from '../../assets/image/icon.png';
 import Grid from '@material-ui/core/Grid';
@@ -11,19 +12,16 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import useStyles from './styles';
 
-const Signup = () => {
+const Signup = ({ onSignup, errors, loading, isAuthenticated }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [handle, setHandle] = useState('');
-    const [errors, setErrors] = useState({});
-    const [loading, setLoading] = useState(false);
-    const [authenticated, setAuthenticated] = useState(false);
+    const isSignup = true;
     const classes = useStyles();
 
     const submitHandler = (e) => {
         e.preventDefault();
-        setLoading(true);
 
         const userData = {
             email: email,
@@ -31,18 +29,7 @@ const Signup = () => {
             confirmPassword: confirmPassword,
             handle: handle
         };
-
-        axios
-            .post('/signup', userData)
-            .then((res) => {
-                console.log(res.data);
-                setLoading(false);
-                setAuthenticated(true);
-            })
-            .catch((err) => {
-                setErrors(err.response.data);
-                setLoading(false);
-            });
+        onSignup(userData, isSignup);
     };
 
     let submit = (
@@ -59,7 +46,7 @@ const Signup = () => {
         submit = <CircularProgress className={classes.spinner} size={30} />;
     }
     let authRedirect = null;
-    if (authenticated) {
+    if (isAuthenticated) {
         authRedirect = <Redirect to="/" />;
     }
 
@@ -80,8 +67,8 @@ const Signup = () => {
                         name="email"
                         type="email"
                         label="Email"
-                        helperText={errors.email}
-                        error={errors.email ? true : false}
+                        helperText={errors?.email}
+                        error={errors?.email ? true : false}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
@@ -92,8 +79,8 @@ const Signup = () => {
                         name="password"
                         type="password"
                         label="Password"
-                        helperText={errors.password}
-                        error={errors.password ? true : false}
+                        helperText={errors?.password}
+                        error={errors?.password ? true : false}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
@@ -104,8 +91,8 @@ const Signup = () => {
                         name="confirmPassword"
                         type="password"
                         label="Confirm Password"
-                        helperText={errors.confirmPassword}
-                        error={errors.confirmPassword ? true : false}
+                        helperText={errors?.confirmPassword}
+                        error={errors?.confirmPassword ? true : false}
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                     />
@@ -116,17 +103,17 @@ const Signup = () => {
                         name="handle"
                         type="text"
                         label="Handle"
-                        helperText={errors.handle}
-                        error={errors.handle ? true : false}
+                        helperText={errors?.handle}
+                        error={errors?.handle ? true : false}
                         value={handle}
                         onChange={(e) => setHandle(e.target.value)}
                     />
-                    {errors.general && (
+                    {errors?.general && (
                         <Typography
                             variant="body2"
                             className={classes.customError}
                         >
-                            {errors.general}
+                            {errors?.general}
                         </Typography>
                     )}
                     {submit}
@@ -142,4 +129,19 @@ const Signup = () => {
     );
 };
 
-export default Signup;
+const mapStateToProps = (state) => {
+    return {
+        errors: state.auth.errorData,
+        loading: state.auth.loading,
+        isAuthenticated: state.auth.token !== null
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onSignup: (userData, isSignup) =>
+            dispatch(actions.userLogin(userData, isSignup))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import ReactDOM from 'react-dom';
-import { createStore, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 
@@ -10,14 +10,20 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 import authreducer from './store/reducers/auth';
+import userReducer from './store/reducers/user';
 
 const composeEnhancers =
     process.env.NODE_ENV === 'development'
         ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
         : null || compose;
 
+const rootReducer = combineReducers({
+    auth: authreducer,
+    user: userReducer
+});
+
 const store = createStore(
-    authreducer,
+    rootReducer,
     composeEnhancers(applyMiddleware(thunk))
 );
 

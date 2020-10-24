@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+import Profile from '../../components/Profile/Profile';
+
 import Grid from '@material-ui/core/Grid';
 import Scream from '../../components/Scream/Scream';
 // import Spinner from '../../components/UI/Spinner/Spinner';
@@ -31,7 +33,7 @@ const Home = () => {
                 ))}
             </Grid>
             <Grid item sm={4} xs={12}>
-                <p>Profile...</p>
+                <Profile />
             </Grid>
         </Grid>
     );

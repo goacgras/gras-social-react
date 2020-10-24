@@ -1,6 +1,7 @@
 import axios from 'axios';
 import jwtDecoded from 'jwt-decode';
 import * as actionTypes from './actionTypes';
+import * as actions from './index';
 
 export const authStart = () => {
     return {
@@ -9,9 +10,14 @@ export const authStart = () => {
 };
 
 export const authSuccess = (token) => {
-    return {
-        type: actionTypes.AUTH_SUCCESS,
-        idToken: token
+    return (dispatch) => {
+        const firebaseIdToken = `Bearer ${token}`;
+        axios.defaults.headers.common['Authorization'] = firebaseIdToken;
+        dispatch({
+            type: actionTypes.AUTH_SUCCESS,
+            idToken: token
+        });
+        dispatch(actions.getAuthenticatedUser());
     };
 };
 
@@ -23,10 +29,14 @@ export const authFail = (errorData) => {
 };
 
 export const authLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('expirationDate');
-    return {
-        type: actionTypes.AUTH_LOGOUT
+    return (dispatch) => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expirationDate');
+        delete axios.defaults.headers.common['Authorization'];
+        dispatch(actions.authenticatedUserLogout());
+        dispatch({
+            type: actionTypes.AUTH_LOGOUT
+        });
     };
 };
 
@@ -38,22 +48,24 @@ export const checkAuthTimeout = (expiresIn) => {
     };
 };
 
-export const userLogin = (email, password) => {
+export const userLogin = (userData, isSignup) => {
     return (dispatch) => {
         dispatch(authStart());
-        const userData = {
-            email: email,
-            password: password
-        };
+        let url = '/login';
+        if (isSignup) {
+            url = '/signup';
+        }
         axios
-            .post('/login', userData)
+            .post(url, userData)
             .then((res) => {
                 const decodedToken = jwtDecoded(res.data.token);
-                const expirationDate = decodedToken.exp;
-                console.log(expirationDate);
+                const timeInToken = decodedToken.exp;
+                const expirationDate = new Date(timeInToken * 1000);
+                const expiresIn =
+                    (expirationDate.getTime() - Date.now()) / 1000;
 
                 dispatch(authSuccess(res.data.token));
-                dispatch(checkAuthTimeout(expirationDate));
+                dispatch(checkAuthTimeout(expiresIn));
 
                 localStorage.setItem('token', `Bearer ${res.data.token}`);
                 localStorage.setItem('expirationDate', expirationDate);
@@ -61,5 +73,29 @@ export const userLogin = (email, password) => {
             .catch((err) => {
                 dispatch(authFail(err.response.data));
             });
+    };
+};
+
+export const authCheckState = () => {
+    return (dispatch) => {
+        const token = localStorage.getItem('token')?.slice(7);
+        if (!token) {
+            dispatch(authLogout());
+        } else {
+            const expirationDate = new Date(
+                localStorage.getItem('expirationDate')
+            );
+            if (expirationDate < new Date()) {
+                dispatch(authLogout());
+            } else {
+                dispatch(authSuccess(token));
+                dispatch(
+                    checkAuthTimeout(
+                        (expirationDate.getTime() - Date.now()) / 1000
+                    )
+                );
+                console.log((expirationDate.getTime() - Date.now()) / 1000);
+            }
+        }
     };
 };

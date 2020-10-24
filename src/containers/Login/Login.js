@@ -16,11 +16,16 @@ import useStyles from './styles';
 const Login = ({ onLogin, errors, loading, isAuthenticated }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const isSignup = false;
     const classes = useStyles();
 
     const submitHandler = (e) => {
         e.preventDefault();
-        onLogin(email, password);
+        const userData = {
+            email: email,
+            password: password
+        };
+        onLogin(userData, isSignup);
     };
 
     let submit = (
@@ -57,8 +62,8 @@ const Login = ({ onLogin, errors, loading, isAuthenticated }) => {
                         name="email"
                         type="email"
                         label="Email"
-                        helperText={errors.email}
-                        error={errors.email ? true : false}
+                        helperText={errors?.email}
+                        error={errors?.email ? true : false}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
@@ -69,17 +74,17 @@ const Login = ({ onLogin, errors, loading, isAuthenticated }) => {
                         name="password"
                         type="password"
                         label="Password"
-                        helperText={errors.password}
-                        error={errors.password ? true : false}
+                        helperText={errors?.password}
+                        error={errors?.password ? true : false}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    {errors.general && (
+                    {errors?.general && (
                         <Typography
                             variant="body2"
                             className={classes.customError}
                         >
-                            {errors.general}
+                            {errors?.general}
                         </Typography>
                     )}
                     {submit}
@@ -97,16 +102,16 @@ const Login = ({ onLogin, errors, loading, isAuthenticated }) => {
 
 const mapStateToProps = (state) => {
     return {
-        errors: state.errorData,
-        loading: state.loading,
-        isAuthenticated: state.token !== null
+        errors: state.auth.errorData,
+        loading: state.auth.loading,
+        isAuthenticated: state.auth.token !== null
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onLogin: (email, password) =>
-            dispatch(actions.userLogin(email, password))
+        onLogin: (userData, isSignup) =>
+            dispatch(actions.userLogin(userData, isSignup))
     };
 };
 

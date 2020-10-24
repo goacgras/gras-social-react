@@ -1,8 +1,10 @@
-import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Route, Switch, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import { MuiThemeProvider } from '@material-ui/core/styles/';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import themeData from './util/theme';
 
 import Home from './containers/Home/Home';
 import Login from './containers/Login/Login';
@@ -10,44 +12,54 @@ import Signup from './containers/Signup/Signup';
 import Navbar from './components/Navbar/Navbar';
 import Logout from './components/Logout/Logout';
 
+import * as actions from './store/actions/index';
+
 import './App.css';
 
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            light: '#33c9dc',
-            main: '#00bcd4',
-            dark: '#008394',
-            contrastText: '#fff'
-        },
-        secondary: {
-            light: '#ff6333',
-            main: '#ff3d00',
-            dark: '#b22a00',
-            contrastText: '#fff'
-        }
-    },
-    typography: {
-        useNextVariants: true
-    }
-});
+const theme = createMuiTheme(themeData);
 
-function App() {
+function App({ isAuthenticated, onTryAutoSignup }) {
+    useEffect(() => {
+        onTryAutoSignup();
+    }, [onTryAutoSignup]);
+
+    let routes = (
+        <Switch>
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/signup" component={Signup} />
+            <Route exact path="/" component={Home} />
+            <Redirect to="/" />
+        </Switch>
+    );
+
+    if (isAuthenticated) {
+        routes = (
+            <Switch>
+                <Route path="/logout" component={Logout} />
+                <Route exact path="/" component={Home} />
+                <Redirect to="/" />
+            </Switch>
+        );
+    }
+
     return (
         <MuiThemeProvider theme={theme}>
-            <div className="App">
-                <Navbar />
-                <div className="container">
-                    <Switch>
-                        <Route path="/logout" component={Logout} />
-                        <Route exact path="/login" component={Login} />
-                        <Route exact path="/signup" component={Signup} />
-                        <Route exact path="/" component={Home} />
-                    </Switch>
-                </div>
-            </div>
+            <Navbar />
+            <div className="container">{routes}</div>
         </MuiThemeProvider>
     );
 }
 
-export default App;
+const mapStateToProps = (state) => {
+    return {
+        isAuthenticated: state.auth.token !== null
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onTryAutoSignup: () => dispatch(actions.authCheckState())
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

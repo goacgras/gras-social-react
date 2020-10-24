@@ -2,7 +2,7 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
     token: null,
-    errorData: {},
+    errorData: null,
     loading: false,
     authRedirectPath: '/'
 };
@@ -12,14 +12,14 @@ const reducer = (state = initialState, action) => {
         case actionTypes.AUTH_START:
             return {
                 ...state,
-                errorData: {},
+                errorData: null,
                 loading: true
             };
         case actionTypes.AUTH_SUCCESS:
             return {
                 ...state,
                 token: action.idToken,
-                errorData: {},
+                errorData: null,
                 loading: false
             };
         case actionTypes.AUTH_FAIL:
@@ -32,7 +32,7 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 token: null,
-                errorData: {}
+                errorData: null
             };
         default:
             return state;
