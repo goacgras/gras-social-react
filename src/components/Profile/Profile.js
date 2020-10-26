@@ -1,24 +1,47 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import dayjs from 'dayjs';
+
+import UserDetails from '../UserDetails/UserDetails';
+import GrasButton from '../UI/GrasButton/GrasButton';
+import Spinner from '../UI/Spinner/Spinner';
 
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import MuiLink from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
+import EditIcon from '@material-ui/icons/Edit';
 
 import LocationOn from '@material-ui/icons/LocationOn';
 import LinkIcon from '@material-ui/icons/Link';
 import CalenderToday from '@material-ui/icons/CalendarToday';
+import KeyboardReturn from '@material-ui/icons/KeyboardReturn';
 
 import useStyles from './styles';
 
-const Profile = ({ isAuthenticated, loading, credentials }) => {
+const Profile = ({
+    isAuthenticated,
+    userLoading,
+    credentials,
+    onUploadUserImage,
+    onUpdateUserDetails
+}) => {
     const classes = useStyles();
 
+    const uploadImageHandler = (event) => {
+        const image = event.target.files[0];
+        const formData = new FormData();
+        formData.append('image', image, image.name);
+        onUploadUserImage(formData);
+    };
+
+    const editPictureHandler = () => {
+        const fileInput = document.getElementById('imageInput');
+        fileInput.click();
+    };
+
     //if loading and if isAuthenticated
-    let profileMarkup = !loading ? (
+    let profileMarkup = !userLoading ? (
         isAuthenticated ? (
             <Paper className={classes.paper}>
                 <div className={classes.profile}>
@@ -28,6 +51,20 @@ const Profile = ({ isAuthenticated, loading, credentials }) => {
                             src={credentials?.imageUrl}
                             alt="profile"
                         />
+                        <input
+                            type="file"
+                            id="imageInput"
+                            hidden="hidden"
+                            onChange={uploadImageHandler}
+                        />
+                        <GrasButton
+                            btnClassName="button"
+                            tip="Edit profile picture"
+                            placement="top"
+                            onClick={editPictureHandler}
+                        >
+                            <EditIcon color="primary" />
+                        </GrasButton>
                     </div>
                     <hr />
                     <div className="profile-details">
@@ -73,6 +110,15 @@ const Profile = ({ isAuthenticated, loading, credentials }) => {
                             {dayjs(credentials?.createdAt).format('MMM YYYY')}
                         </span>
                     </div>
+                    <GrasButton tip="Logout" placement="top">
+                        <NavLink to="/logout">
+                            <KeyboardReturn color="primary" />
+                        </NavLink>
+                    </GrasButton>
+                    <UserDetails
+                        onUpdateUserDetails={onUpdateUserDetails}
+                        credentials={credentials}
+                    />
                 </div>
             </Paper>
         ) : (
@@ -101,18 +147,10 @@ const Profile = ({ isAuthenticated, loading, credentials }) => {
             </Paper>
         )
     ) : (
-        <p>loading...</p>
+        <Spinner />
     );
 
     return profileMarkup;
 };
 
-const mapStateToProps = (state) => {
-    return {
-        credentials: state.user.credentials,
-        loading: state.user.loading,
-        isAuthenticated: state.auth.token !== null
-    };
-};
-
-export default connect(mapStateToProps)(Profile);
+export default Profile;

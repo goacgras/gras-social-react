@@ -15,5 +15,8 @@ export default {
     },
     typography: {
         useNextVariants: true
+    },
+    textField: {
+        margin: '10px auto 10px auto'
     }
 };

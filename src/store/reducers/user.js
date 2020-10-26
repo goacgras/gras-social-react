@@ -27,6 +27,25 @@ const reducer = (state = initialState, action) => {
                 likes: null,
                 notifications: null
             };
+        case actionTypes.LIKE_SCREAM:
+            return {
+                //get copy of all states, get copy of likes and add a new like
+                ...state,
+                likes: [
+                    ...state.likes,
+                    {
+                        userHandle: state.credentials.handle,
+                        screamId: action.likeData.screamId
+                    }
+                ]
+            };
+        case actionTypes.UNLIKE_SCREAM:
+            return {
+                ...state,
+                likes: state.likes.filter(
+                    (like) => like.screamId !== action.likeData.screamId
+                )
+            };
         default:
             return state;
     }

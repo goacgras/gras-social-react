@@ -11,6 +11,7 @@ import * as serviceWorker from './serviceWorker';
 
 import authreducer from './store/reducers/auth';
 import userReducer from './store/reducers/user';
+import screamReducer from './store/reducers/scream';
 
 const composeEnhancers =
     process.env.NODE_ENV === 'development'
@@ -19,7 +20,8 @@ const composeEnhancers =
 
 const rootReducer = combineReducers({
     auth: authreducer,
-    user: userReducer
+    user: userReducer,
+    scream: screamReducer
 });
 
 const store = createStore(

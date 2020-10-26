@@ -9,7 +9,7 @@ import themeData from './util/theme';
 import Home from './containers/Home/Home';
 import Login from './containers/Login/Login';
 import Signup from './containers/Signup/Signup';
-import Navbar from './components/Navbar/Navbar';
+import Navbar from './containers/Navbar/Navbar';
 import Logout from './components/Logout/Logout';
 
 import * as actions from './store/actions/index';
@@ -18,7 +18,7 @@ import './App.css';
 
 const theme = createMuiTheme(themeData);
 
-function App({ isAuthenticated, onTryAutoSignup }) {
+const App = ({ isAuthenticated, onTryAutoSignup }) => {
     useEffect(() => {
         onTryAutoSignup();
     }, [onTryAutoSignup]);
@@ -48,7 +48,7 @@ function App({ isAuthenticated, onTryAutoSignup }) {
             <div className="container">{routes}</div>
         </MuiThemeProvider>
     );
-}
+};
 
 const mapStateToProps = (state) => {
     return {

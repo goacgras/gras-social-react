@@ -28,6 +28,30 @@ export const getAuthenticatedUser = () => {
     };
 };
 
+export const uploadUserImage = (formData) => {
+    return (dispatch) => {
+        axios
+            .post('/user/image', formData)
+            .then(() => {
+                dispatch(getAuthenticatedUser());
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+};
+
+export const editUserDetails = (userDetails) => {
+    return (dispatch) => {
+        axios
+            .post('/user', userDetails)
+            .then(() => {
+                dispatch(getAuthenticatedUser());
+            })
+            .catch((err) => console.log(err));
+    };
+};
+
 export const authenticatedUserLogout = () => {
     return {
         type: actionTypes.AUTHENTICATED_USER_LOGOUT

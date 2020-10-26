@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles({
     card: {
+        position: 'relative',
         display: 'flex',
         marginBottom: 20
     },
