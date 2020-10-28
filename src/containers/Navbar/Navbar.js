@@ -3,26 +3,29 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import GrasButton from '../../components/UI/GrasButton/GrasButton';
+import PostScream from '../../components/PostScream/PostScream';
 
 import AppBar from '@material-ui/core/AppBar';
 import ToolBar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 
-import AddIcon from '@material-ui/icons/Add';
 import HomeIcon from '@material-ui/icons/Home';
 import Notifications from '@material-ui/icons/Notifications';
 
 import classes from './Navbar.module.css';
+import * as actions from '../../store/actions/index';
 
-const Navbar = ({ isAuthenticated }) => {
+const Navbar = ({ isAuthenticated, isLoading, onPostScream, errors }) => {
     return (
         <AppBar>
             <ToolBar className={classes.Container}>
                 {isAuthenticated ? (
                     <React.Fragment>
-                        <GrasButton tip="Post a scream!">
-                            <AddIcon />
-                        </GrasButton>
+                        <PostScream
+                            isLoading={isLoading}
+                            onPostScream={onPostScream}
+                            errors={errors}
+                        />
                         <Link to="/home">
                             <GrasButton tip="Home">
                                 <HomeIcon />
@@ -52,8 +55,16 @@ const Navbar = ({ isAuthenticated }) => {
 
 const mapStateToProps = (state) => {
     return {
-        isAuthenticated: state.auth.token !== null
+        isAuthenticated: state.auth.token !== null,
+        isLoading: state.scream.loadingPost,
+        errors: state.scream.errorData
     };
 };
 
-export default connect(mapStateToProps)(Navbar);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onPostScream: (newScream) => dispatch(actions.postScream(newScream))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

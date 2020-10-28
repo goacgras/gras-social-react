@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Profile from '../../components/Profile/Profile';
 
 import Grid from '@material-ui/core/Grid';
-import Scream from '../../components/Scream/Scream';
+import Scream from '../Scream/Scream';
 import Spinner from '../../components/UI/Spinner/Spinner';
 
 import * as actions from '../../store/actions/index';
@@ -17,17 +17,12 @@ const Home = ({
     onUploadUserImage,
     onUpdateUserDetails,
     onGetAllScreams,
-    screamLoading,
-    likesData,
-    onLikeScream,
-    onUnlikeScream,
-    onDeleteScream
+    screamLoading
 }) => {
+    // console.log(props);
     useEffect(() => {
         onGetAllScreams();
     }, [onGetAllScreams]);
-
-    console.log(screams);
 
     let screamsPage = <Spinner />;
     if (!screamLoading) {
@@ -41,12 +36,6 @@ const Home = ({
                 likeCount={scream.likeCount}
                 commentCount={scream.commentCount}
                 screamId={scream.screamId}
-                likesData={likesData}
-                isAuthenticated={isAuthenticated}
-                credentials={credentials}
-                onLikeScream={onLikeScream}
-                onUnlikeScream={onUnlikeScream}
-                onDeleteScream={onDeleteScream}
             />
         ));
     }
@@ -73,7 +62,6 @@ const mapStateToProps = (state) => {
     return {
         credentials: state.user.credentials,
         userLoading: state.user.loading,
-        likesData: state.user.likes,
         isAuthenticated: state.auth.token !== null,
         screams: state.scream.screams,
         screamLoading: state.scream.loading
@@ -86,10 +74,7 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(actions.uploadUserImage(formData)),
         onUpdateUserDetails: (userDetails) =>
             dispatch(actions.editUserDetails(userDetails)),
-        onGetAllScreams: () => dispatch(actions.getAllScreams()),
-        onLikeScream: (id) => dispatch(actions.likeScream(id)),
-        onUnlikeScream: (id) => dispatch(actions.unLikeScream(id)),
-        onDeleteScream: (id) => dispatch(actions.deleteScream(id))
+        onGetAllScreams: () => dispatch(actions.getAllScreams())
     };
 };
 

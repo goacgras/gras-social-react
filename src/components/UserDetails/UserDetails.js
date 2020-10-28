@@ -15,6 +15,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import useStyles from './styles';
 
 const UserDetails = ({ onUpdateUserDetails, credentials }) => {
+    const classes = useStyles();
+
     const [bio, setBio] = useState('');
     const [website, setWebsite] = useState('');
     const [location, setLocation] = useState('');
@@ -41,7 +43,7 @@ const UserDetails = ({ onUpdateUserDetails, credentials }) => {
         onUpdateUserDetails(userData);
         showDialogHandler();
     };
-    const classes = useStyles();
+
     return (
         <React.Fragment>
             <GrasButton

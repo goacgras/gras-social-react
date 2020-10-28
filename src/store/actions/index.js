@@ -10,5 +10,7 @@ export {
     getAllScreams,
     likeScream,
     unLikeScream,
-    deleteScream
+    deleteScream,
+    postScream,
+    getScream
 } from './scream';
