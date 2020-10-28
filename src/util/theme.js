@@ -14,8 +14,10 @@ export default {
         }
     },
     typography: {
-        useNextVariants: true
+        useNextVariants: true,
+        fontFamily: 'Noto Sans JP'
     },
+
     textField: {
         margin: '10px auto 10px auto'
     }

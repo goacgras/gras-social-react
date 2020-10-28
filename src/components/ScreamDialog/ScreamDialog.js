@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 
 import GrasButton from '../UI/GrasButton/GrasButton';
 import LikeButton from '../LikeButton/LikeButton';
+import Comments from '../Comments/Comments';
+import CommentForm from '../CommentForm/CommentForm';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -16,7 +18,6 @@ import UnfoldMore from '@material-ui/icons/UnfoldMore';
 import ChatIcon from '@material-ui/icons/Chat';
 
 import useStyles from './styles';
-import Comments from '../Comments/Comments';
 
 const ScreamDialog = ({
     screamId,
@@ -25,6 +26,8 @@ const ScreamDialog = ({
     loadingFetchDetail,
     likesData,
     isAuthenticated,
+    errorDataComment,
+    onAddNewComment,
     onGetScream,
     onLikeScream,
     onUnlikeScream
@@ -54,6 +57,7 @@ const ScreamDialog = ({
                     alt="Profile"
                 />
             </Grid>
+
             <Grid item sm={7}>
                 <Typography
                     component={Link}
@@ -63,14 +67,18 @@ const ScreamDialog = ({
                 >
                     @{userHandle}
                 </Typography>
+
                 <hr className={classes.ruler} />
+
                 <Typography variant="body2" color="textSecondary">
                     {dayjs(screamDetails?.createdAt).format(
                         'h:mm a, MMMM DD YYYY'
                     )}
                 </Typography>
+
                 <hr className={classes.ruler} />
                 <Typography variant="body1">{screamDetails?.body}</Typography>
+
                 <LikeButton
                     screamId={screamId}
                     onLikeScream={onLikeScream}
@@ -78,16 +86,23 @@ const ScreamDialog = ({
                     likesData={likesData}
                     isAuthenticated={isAuthenticated}
                 />
+
                 <span>{screamDetails?.likeCount} likes</span>
                 <GrasButton tip="comments" placement="top">
                     <ChatIcon color="primary" />
                 </GrasButton>
                 <span>{screamDetails?.commentCount} comments</span>
             </Grid>
+
             {screamDetails.comments?.length > 0 && (
                 <hr className={classes.visibleRuler} />
             )}
-
+            <CommentForm
+                screamId={screamId}
+                isAuthenticated={isAuthenticated}
+                errors={errorDataComment}
+                onAddNewComment={onAddNewComment}
+            />
             <Comments comments={screamDetails.comments} />
         </Grid>
     );

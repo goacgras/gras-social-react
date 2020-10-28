@@ -12,5 +12,6 @@ export {
     unLikeScream,
     deleteScream,
     postScream,
-    getScream
+    getScream,
+    addNewComment
 } from './scream';

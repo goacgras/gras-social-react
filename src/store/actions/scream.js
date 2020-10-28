@@ -1,6 +1,7 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
 
+//FETCH SCREAMS
 const fetchScreamsStart = () => {
     return {
         type: actionTypes.FETCH_SCREAMS_START
@@ -35,6 +36,7 @@ export const getAllScreams = () => {
     };
 };
 
+//FETCH SCREAM DETAILS
 const fetchScreamDetailStart = () => {
     return {
         type: actionTypes.FETCH_SCREAM_DETAIL_START
@@ -68,6 +70,7 @@ export const getScream = (screamId) => {
     };
 };
 
+//LIKE & UNLIKE SCREAM
 const setLikeScream = (likeData) => {
     return {
         type: actionTypes.LIKE_SCREAM,
@@ -79,33 +82,6 @@ const setUnlikeScream = (likeData) => {
     return {
         type: actionTypes.UNLIKE_SCREAM,
         likeData: likeData
-    };
-};
-
-const setDeleteScream = (screamId) => {
-    return {
-        type: actionTypes.DELETE_SCREAM,
-        screamId: screamId
-    };
-};
-
-const setNewScreamStart = () => {
-    return {
-        type: actionTypes.SET_NEW_SCREAM_START
-    };
-};
-
-const setNewScreamSuccess = (newScream) => {
-    return {
-        type: actionTypes.SET_NEW_SCREAM_SUCESS,
-        newScream: newScream
-    };
-};
-
-const setNewScreamFail = (errorData) => {
-    return {
-        type: actionTypes.SET_NEW_SCREAM_FAIL,
-        errorData: errorData
     };
 };
 
@@ -131,6 +107,14 @@ export const unLikeScream = (screamId) => {
     };
 };
 
+//DELETE SCREAM
+const setDeleteScream = (screamId) => {
+    return {
+        type: actionTypes.DELETE_SCREAM,
+        screamId: screamId
+    };
+};
+
 export const deleteScream = (screamId) => {
     return (dispatch) => {
         axios
@@ -139,6 +123,27 @@ export const deleteScream = (screamId) => {
                 dispatch(setDeleteScream(screamId));
             })
             .catch((err) => console.log(err));
+    };
+};
+
+//POST NEW SCREAM
+const setNewScreamStart = () => {
+    return {
+        type: actionTypes.SET_NEW_SCREAM_START
+    };
+};
+
+const setNewScreamSuccess = (newScream) => {
+    return {
+        type: actionTypes.SET_NEW_SCREAM_SUCESS,
+        newScream: newScream
+    };
+};
+
+const setNewScreamFail = (errorData) => {
+    return {
+        type: actionTypes.SET_NEW_SCREAM_FAIL,
+        errorData: errorData
     };
 };
 
@@ -152,6 +157,41 @@ export const postScream = (newScream) => {
             })
             .catch((err) => {
                 dispatch(setNewScreamFail(err.response.data));
+            });
+    };
+};
+
+//COMMENT
+const setCommentSuccess = (newComment) => {
+    return {
+        type: actionTypes.SET_COMMENT_SUCCESS,
+        newComment: newComment
+    };
+};
+
+const setCommentFail = (errorData) => {
+    return {
+        type: actionTypes.SET_COMMENT_FAIL,
+        errorData: errorData
+    };
+};
+
+const setCommentStart = () => {
+    return {
+        type: actionTypes.SET_COMMENT_START
+    };
+};
+
+export const addNewComment = (screamId, commentData) => {
+    return (dispatch) => {
+        dispatch(setCommentStart());
+        axios
+            .post(`/scream/${screamId}/comment`, commentData)
+            .then((res) => {
+                dispatch(setCommentSuccess(res.data));
+            })
+            .catch((err) => {
+                dispatch(setCommentFail(err.response.data));
             });
     };
 };

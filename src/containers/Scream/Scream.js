@@ -32,6 +32,8 @@ const Scream = ({
     credentials,
     screamDetails,
     loadingFetchDetail,
+    errorDataComment,
+    onAddNewComment,
     onLikeScream,
     onUnlikeScream,
     onDeleteScream,
@@ -58,11 +60,15 @@ const Scream = ({
                         {userHandle}
                     </Typography>
                 </Link>
+
                 {deleteButton}
+
                 <Typography variant="body2" color="secondary">
                     {dayJs(createdAt).fromNow()}
                 </Typography>
+
                 <Typography variant="body1">{body}</Typography>
+
                 <LikeButton
                     isAuthenticated={isAuthenticated}
                     onLikeScream={onLikeScream}
@@ -71,10 +77,13 @@ const Scream = ({
                     likesData={likesData}
                 />
                 <span>{likeCount} Likes</span>
+
                 <GrasButton tip="comments" placement="top">
                     <ChatIcon color="primary" />
                 </GrasButton>
+
                 <span>{commentCount} comments</span>
+
                 <ScreamDialog
                     screamId={screamId}
                     userHandle={userHandle}
@@ -85,6 +94,8 @@ const Scream = ({
                     onUnlikeScream={onUnlikeScream}
                     likesData={likesData}
                     isAuthenticated={isAuthenticated}
+                    errorDataComment={errorDataComment}
+                    onAddNewComment={onAddNewComment}
                 />
             </CardContent>
         </Card>
@@ -97,7 +108,8 @@ const mapStateToProps = (state) => {
         isAuthenticated: state.auth.token !== null,
         credentials: state.user.credentials,
         screamDetails: state.scream.scream,
-        loadingFetchDetail: state.scream.loadingFetchDetail
+        loadingFetchDetail: state.scream.loadingFetchDetail,
+        errorDataComment: state.scream.errorDataComment
     };
 };
 
@@ -106,7 +118,8 @@ const mapDispatchToProps = (dispatch) => {
         onLikeScream: (id) => dispatch(actions.likeScream(id)),
         onUnlikeScream: (id) => dispatch(actions.unLikeScream(id)),
         onDeleteScream: (id) => dispatch(actions.deleteScream(id)),
-        onGetScream: (id) => dispatch(actions.getScream(id))
+        onGetScream: (id) => dispatch(actions.getScream(id)),
+        onAddNewComment: (id, data) => dispatch(actions.addNewComment(id, data))
     };
 };
 

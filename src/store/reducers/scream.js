@@ -1,12 +1,15 @@
 import * as actionTypes from '../actions/actionTypes';
 
+//NEED TO SEPERATE THE REDUCER!!!!!!!!!
 const initialState = {
     screams: [],
     scream: {},
     loading: false,
     loadingPost: false,
     loadingFetchDetail: false,
-    errorData: null
+    loadingComment: false,
+    errorData: null,
+    errorDataComment: null
 };
 
 const reducer = (state = initialState, action) => {
@@ -71,7 +74,8 @@ const reducer = (state = initialState, action) => {
         case actionTypes.FETCH_SCREAM_DETAIL_START:
             return {
                 ...state,
-                loadingFetchDetail: true
+                loadingFetchDetail: true,
+                errorData: null
             };
         case actionTypes.FETCH_SCREAM_DETAIL_FAIL:
             return {
@@ -82,8 +86,32 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 loadingFetchDetail: false,
+                errorData: null,
                 scream: action.screamDetails
             };
+        case actionTypes.SET_COMMENT_START:
+            return {
+                ...state,
+                loadingComment: true,
+                errorDataComment: null
+            };
+        case actionTypes.SET_COMMENT_FAIL:
+            return {
+                ...state,
+                loadingComment: false,
+                errorDataComment: action.errorData
+            };
+        case actionTypes.SET_COMMENT_SUCCESS:
+            return {
+                ...state,
+                errorDataComment: null,
+                loadingComment: false,
+                scream: {
+                    ...state.scream,
+                    comments: [action.newComment, ...state.scream.comments]
+                }
+            };
+
         case actionTypes.AUTH_LOGOUT:
             return {
                 ...state,

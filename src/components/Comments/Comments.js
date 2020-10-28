@@ -25,6 +25,7 @@ const Comments = ({ comments }) => {
                                         alt="comment"
                                     />
                                 </Grid>
+
                                 <Grid item sm={9}>
                                     <div className={classes.commentData}>
                                         <Typography
@@ -53,6 +54,7 @@ const Comments = ({ comments }) => {
                                 </Grid>
                             </Grid>
                         </Grid>
+
                         {index !== comments.length - 1 && (
                             <hr className={classes.visibleRuler} />
                         )}
