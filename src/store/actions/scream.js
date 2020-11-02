@@ -2,13 +2,13 @@ import * as actionTypes from './actionTypes';
 import axios from 'axios';
 
 //FETCH SCREAMS
-const fetchScreamsStart = () => {
+export const fetchScreamsStart = () => {
     return {
         type: actionTypes.FETCH_SCREAMS_START
     };
 };
 
-const fetchScreamsSuccess = (allScreams) => {
+export const fetchScreamsSuccess = (allScreams) => {
     return {
         type: actionTypes.FETCH_SCREAMS_SUCCESS,
         allScreams: allScreams

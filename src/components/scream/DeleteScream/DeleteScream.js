@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import GrasButton from '../UI/GrasButton/GrasButton';
+import GrasButton from '../../UI/GrasButton/GrasButton';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';

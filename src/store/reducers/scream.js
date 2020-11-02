@@ -33,17 +33,20 @@ const reducer = (state = initialState, action) => {
             };
         case actionTypes.LIKE_SCREAM:
         case actionTypes.UNLIKE_SCREAM:
-            const newArray = [...state.screams];
+            const newScreamsArray = [...state.screams];
+            const newScreamObj = { ...state.scream };
             let index = state.screams.findIndex(
                 (scream) => scream.screamId === action.likeData.screamId
             );
-            newArray[index] = action.likeData;
+            newScreamsArray[index] = action.likeData;
             if (state.scream.screamId === action.likeData.screamId) {
-                state.scream = action.likeData;
+                newScreamObj.likeCount = action.likeData.likeCount;
+                // state.scream = action.likeData.likeCount;
             }
             return {
                 ...state,
-                screams: newArray
+                screams: newScreamsArray,
+                scream: newScreamObj
             };
         case actionTypes.DELETE_SCREAM:
             return {

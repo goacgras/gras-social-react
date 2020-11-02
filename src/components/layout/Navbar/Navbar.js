@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import GrasButton from '../../UI/GrasButton/GrasButton';
-import PostScream from '../../PostScream/PostScream';
+import PostScream from '../../scream/PostScream/PostScream';
 
 import AppBar from '@material-ui/core/AppBar';
 import ToolBar from '@material-ui/core/Toolbar';

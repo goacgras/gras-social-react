@@ -5,9 +5,9 @@ import dayJs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
 import GrasButton from '../../UI/GrasButton/GrasButton';
-import DeleteScream from '../../DeleteScream/DeleteScream';
-import ScreamDialog from '../../ScreamDialog/ScreamDialog';
-import LikeButton from '../../components/LikeButton/LikeButton';
+import DeleteScream from '../DeleteScream/DeleteScream';
+import ScreamDialog from '../ScreamDialog/ScreamDialog';
+import LikeButton from '../LikeButton/LikeButton';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';

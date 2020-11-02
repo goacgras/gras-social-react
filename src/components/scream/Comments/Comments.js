@@ -12,7 +12,7 @@ const Comments = ({ comments }) => {
     const classes = useStyles();
     return (
         <Grid container>
-            {comments.map((comment, index) => {
+            {comments?.map((comment, index) => {
                 const { body, createdAt, userHandle, userImage } = comment;
                 return (
                     <React.Fragment key={createdAt}>

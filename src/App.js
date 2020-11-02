@@ -9,8 +9,10 @@ import themeData from './util/theme';
 import Home from './containers/Home/Home';
 import Login from './containers/Login/Login';
 import Signup from './containers/Signup/Signup';
-import Navbar from './containers/Navbar/Navbar';
+import Navbar from './components/layout/Navbar/Navbar';
 import Logout from './components/Logout/Logout';
+import User from './containers/User/User';
+import ScreamDialog from './components/scream/ScreamDialog/ScreamDialog';
 
 import * as actions from './store/actions/index';
 
@@ -25,6 +27,12 @@ const App = ({ isAuthenticated, onTryAutoSignup }) => {
 
     let routes = (
         <Switch>
+            <Route
+                exact
+                path="/user/:userHandle/scream/:screamIdParam"
+                component={ScreamDialog}
+            />
+            <Route exact path="/user/:userHandle" component={User} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/signup" component={Signup} />
             <Route exact path="/" component={Home} />
@@ -35,7 +43,13 @@ const App = ({ isAuthenticated, onTryAutoSignup }) => {
     if (isAuthenticated) {
         routes = (
             <Switch>
-                <Route path="/logout" component={Logout} />
+                <Route
+                    exact
+                    path="/user/:userHandle/scream/:screamIdParam"
+                    component={ScreamDialog}
+                />
+                <Route exact path="/user/:userHandle" component={User} />
+                <Route exact path="/logout" component={Logout} />
                 <Route exact path="/" component={Home} />
                 <Redirect to="/" />
             </Switch>

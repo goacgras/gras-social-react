@@ -3,7 +3,8 @@ export {
     getAuthenticatedUser,
     authenticatedUserLogout,
     uploadUserImage,
-    editUserDetails
+    editUserDetails,
+    getUserDetails
 } from './user';
 
 export {
@@ -13,5 +14,7 @@ export {
     deleteScream,
     postScream,
     getScream,
-    addNewComment
+    addNewComment,
+    fetchScreamsStart,
+    fetchScreamsSuccess
 } from './scream';

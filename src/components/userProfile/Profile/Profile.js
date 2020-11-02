@@ -1,23 +1,25 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
 import dayjs from 'dayjs';
 
 import UserDetails from '../UserDetails/UserDetails';
-import GrasButton from '../UI/GrasButton/GrasButton';
-import Spinner from '../UI/Spinner/Spinner';
+import GrasButton from '../../UI/GrasButton/GrasButton';
+import Spinner from '../../UI/Spinner/Spinner';
 
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import MuiLink from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
-import EditIcon from '@material-ui/icons/Edit';
 
+import EditIcon from '@material-ui/icons/Edit';
 import LocationOn from '@material-ui/icons/LocationOn';
 import LinkIcon from '@material-ui/icons/Link';
 import CalenderToday from '@material-ui/icons/CalendarToday';
 import KeyboardReturn from '@material-ui/icons/KeyboardReturn';
 
 import useStyles from './styles';
+import * as actions from '../../../store/actions/index';
 
 const Profile = ({
     isAuthenticated,
@@ -153,4 +155,21 @@ const Profile = ({
     return profileMarkup;
 };
 
-export default Profile;
+const mapStateToProps = (state) => {
+    return {
+        credentials: state.user.credentials,
+        userLoading: state.user.loading,
+        isAuthenticated: state.auth.token !== null
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onUploadUserImage: (formData) =>
+            dispatch(actions.uploadUserImage(formData)),
+        onUpdateUserDetails: (userDetails) =>
+            dispatch(actions.editUserDetails(userDetails))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

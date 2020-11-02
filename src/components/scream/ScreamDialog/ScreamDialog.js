@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import dayjs from 'dayjs';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-import GrasButton from '../UI/GrasButton/GrasButton';
+import GrasButton from '../../UI/GrasButton/GrasButton';
 import LikeButton from '../LikeButton/LikeButton';
 import Comments from '../Comments/Comments';
 import CommentForm from '../CommentForm/CommentForm';
@@ -18,31 +19,38 @@ import UnfoldMore from '@material-ui/icons/UnfoldMore';
 import ChatIcon from '@material-ui/icons/Chat';
 
 import useStyles from './styles';
+import * as actions from '../../../store/actions/index';
 
 const ScreamDialog = ({
     screamId,
     userHandle,
     screamDetails,
     loadingFetchDetail,
-    likesData,
     isAuthenticated,
     errorDataComment,
     onAddNewComment,
-    onGetScream,
-    onLikeScream,
-    onUnlikeScream
+    onGetScream
 }) => {
     const classes = useStyles();
+    const { screamIdParam } = useParams();
     const [openDialog, setOpenDialog] = useState(false);
 
-    const handleClose = () => {
-        setOpenDialog(false);
-    };
+    useEffect(() => {
+        if (screamIdParam) {
+            setOpenDialog(true);
+            onGetScream(screamIdParam);
+        }
+    }, [onGetScream, screamIdParam]);
 
-    const handleOpen = () => {
+    const handleClose = useCallback(() => {
+        setOpenDialog(false);
+    }, []);
+
+    const handleOpen = useCallback(() => {
+        console.log('handle open');
         setOpenDialog(true);
         onGetScream(screamId);
-    };
+    }, [onGetScream, screamId]);
 
     let dialogMarkup = loadingFetchDetail ? (
         <div className={classes.spinnerDiv}>
@@ -79,13 +87,7 @@ const ScreamDialog = ({
                 <hr className={classes.ruler} />
                 <Typography variant="body1">{screamDetails?.body}</Typography>
 
-                <LikeButton
-                    screamId={screamId}
-                    onLikeScream={onLikeScream}
-                    onUnlikeScream={onUnlikeScream}
-                    likesData={likesData}
-                    isAuthenticated={isAuthenticated}
-                />
+                <LikeButton screamId={screamId} />
 
                 <span>{screamDetails?.likeCount} likes</span>
                 <GrasButton tip="comments" placement="top">
@@ -138,4 +140,20 @@ const ScreamDialog = ({
     );
 };
 
-export default ScreamDialog;
+const mapStateToProps = (state) => {
+    return {
+        isAuthenticated: state.auth.token !== null,
+        screamDetails: state.scream.scream,
+        loadingFetchDetail: state.scream.loadingFetchDetail,
+        errorDataComment: state.scream.errorDataComment
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onGetScream: (id) => dispatch(actions.getScream(id)),
+        onAddNewComment: (id, data) => dispatch(actions.addNewComment(id, data))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ScreamDialog);
