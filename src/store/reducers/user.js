@@ -46,6 +46,11 @@ const reducer = (state = initialState, action) => {
                     (like) => like.screamId !== action.likeData.screamId
                 )
             };
+        case actionTypes.SET_NOTIFICATIONS_READ:
+            state.notifications.forEach((notif) => (notif.read = true));
+            return {
+                ...state
+            };
         default:
             return state;
     }

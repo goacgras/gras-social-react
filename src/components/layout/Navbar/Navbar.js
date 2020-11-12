@@ -10,7 +10,7 @@ import ToolBar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 
 import HomeIcon from '@material-ui/icons/Home';
-import Notifications from '@material-ui/icons/Notifications';
+import Notifications from '../Notifications/Notifications';
 
 import classes from './Navbar.module.css';
 import * as actions from '../../../store/actions/index';
@@ -31,9 +31,7 @@ const Navbar = ({ isAuthenticated, isLoading, onPostScream, errors }) => {
                                 <HomeIcon />
                             </GrasButton>
                         </Link>
-                        <GrasButton tip="notifications">
-                            <Notifications />
-                        </GrasButton>
+                        <Notifications />
                     </React.Fragment>
                 ) : (
                     <React.Fragment>

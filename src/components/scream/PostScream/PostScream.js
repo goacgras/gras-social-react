@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import GrasButton from '../../UI/GrasButton/GrasButton';
 
 import Button from '@material-ui/core/Button';
@@ -17,39 +17,52 @@ const PostScream = ({ onPostScream, isLoading, errors }) => {
     const classes = useStyles();
     const [showDialog, setShowDialog] = useState(false);
     const [scream, setScream] = useState('');
+    const [stateError, setStateError] = useState('');
 
-    const showDialogHandler = () => {
-        setShowDialog(!showDialog);
-        setScream('');
+    // const showDialogHandler = () => {
+    //     setShowDialog(!showDialog);
+    //     setScream('');
+    // };
+
+    useEffect(() => {
+        if (errors) {
+            setStateError(errors);
+            setShowDialog(true);
+        } else setStateError('');
+    }, [errors]);
+
+    const handleOpen = () => {
+        setShowDialog(true);
+    };
+
+    const handleClose = () => {
+        setShowDialog(false);
     };
     const formSubmit = (e) => {
         e.preventDefault();
         onPostScream({ body: scream });
-        if (errors) {
-            setShowDialog(false);
-        }
         setScream('');
-        // showDialogHandler();
+        handleClose();
     };
     return (
         <React.Fragment>
             <GrasButton
                 tip="Post a scream"
                 placement="top"
-                onClick={showDialogHandler}
+                onClick={handleOpen}
             >
                 <AddIcon />
             </GrasButton>
             <Dialog
                 open={showDialog}
-                onClose={showDialogHandler}
+                onClose={handleClose}
                 fullWidth
                 maxWidth="sm"
             >
                 <GrasButton
                     placement="top"
                     tip="Close"
-                    onClick={showDialogHandler}
+                    onClick={handleClose}
                     tipClassName={classes.closeButton}
                 >
                     <CloseIcon />
@@ -67,8 +80,8 @@ const PostScream = ({ onPostScream, isLoading, errors }) => {
                             rows="3"
                             value={scream}
                             onChange={(e) => setScream(e.target.value)}
-                            error={errors?.body ? true : false}
-                            helperText={errors?.body}
+                            error={stateError?.body ? true : false}
+                            helperText={stateError?.body}
                         />
                         <Button
                             className={classes.submitButton}

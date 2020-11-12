@@ -12,7 +12,7 @@ import Signup from './containers/Signup/Signup';
 import Navbar from './components/layout/Navbar/Navbar';
 import Logout from './components/Logout/Logout';
 import User from './containers/User/User';
-import ScreamDialog from './components/scream/ScreamDialog/ScreamDialog';
+// import ScreamDialog from './components/scream/ScreamDialog/ScreamDialog';
 
 import * as actions from './store/actions/index';
 
@@ -29,8 +29,8 @@ const App = ({ isAuthenticated, onTryAutoSignup }) => {
         <Switch>
             <Route
                 exact
-                path="/user/:userHandle/scream/:screamIdParam"
-                component={ScreamDialog}
+                path="/user/:userHandle/scream/:screamId"
+                component={User}
             />
             <Route exact path="/user/:userHandle" component={User} />
             <Route exact path="/login" component={Login} />
@@ -45,8 +45,8 @@ const App = ({ isAuthenticated, onTryAutoSignup }) => {
             <Switch>
                 <Route
                     exact
-                    path="/user/:userHandle/scream/:screamIdParam"
-                    component={ScreamDialog}
+                    path="/user/:userHandle/scream/:screamId"
+                    component={User}
                 />
                 <Route exact path="/user/:userHandle" component={User} />
                 <Route exact path="/logout" component={Logout} />

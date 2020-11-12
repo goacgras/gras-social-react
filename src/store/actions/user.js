@@ -72,3 +72,20 @@ export const getUserDetails = (userHandle) => {
             });
     };
 };
+
+const setNotificationsRead = () => {
+    return {
+        type: actionTypes.SET_NOTIFICATIONS_READ
+    };
+};
+
+export const onSetNotificationsRead = (notificationsIds) => {
+    return (dispatch) => {
+        axios
+            .post('/notifications', notificationsIds)
+            .then((res) => {
+                dispatch(setNotificationsRead());
+            })
+            .catch((err) => console.log(err));
+    };
+};

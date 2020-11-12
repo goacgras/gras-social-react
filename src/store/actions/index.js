@@ -4,7 +4,8 @@ export {
     authenticatedUserLogout,
     uploadUserImage,
     editUserDetails,
-    getUserDetails
+    getUserDetails,
+    onSetNotificationsRead
 } from './user';
 
 export {

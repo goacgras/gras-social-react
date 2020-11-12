@@ -13,7 +13,15 @@ import * as actions from '../../store/actions/index';
 
 const User = ({ screams, isLoading, onGetUserDetails }) => {
     const { userHandle } = useParams();
+    const { screamId } = useParams();
     const [profile, setProfile] = useState(null);
+    const [screamIdParam, setScreamIdParam] = useState(null);
+
+    useEffect(() => {
+        if (screamId) {
+            setScreamIdParam(screamId);
+        }
+    }, [screamId]);
 
     useEffect(() => {
         onGetUserDetails(userHandle);
@@ -29,10 +37,17 @@ const User = ({ screams, isLoading, onGetUserDetails }) => {
         <Spinner />
     ) : screams === null ? (
         <p>User hasn't scream yet...</p>
-    ) : (
+    ) : !screamIdParam ? (
         screams.map((scream) => (
             <Scream key={scream.screamId} scream={scream} />
         ))
+    ) : (
+        screams.map((scream) => {
+            if (scream.screamId !== screamIdParam)
+                return <Scream key={scream.screamId} scream={scream} />;
+            else
+                return <Scream key={scream.screamId} scream={scream} openDlg />;
+        })
     );
 
     return (

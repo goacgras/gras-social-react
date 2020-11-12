@@ -94,7 +94,6 @@ export const authCheckState = () => {
                         (expirationDate.getTime() - Date.now()) / 1000
                     )
                 );
-                console.log((expirationDate.getTime() - Date.now()) / 1000);
             }
         }
     };

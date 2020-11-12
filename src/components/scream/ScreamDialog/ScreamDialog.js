@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import dayjs from 'dayjs';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import GrasButton from '../../UI/GrasButton/GrasButton';
@@ -22,35 +22,43 @@ import useStyles from './styles';
 import * as actions from '../../../store/actions/index';
 
 const ScreamDialog = ({
+    open,
+    close,
+    click,
+    openDlg,
     screamId,
     userHandle,
     screamDetails,
     loadingFetchDetail,
     isAuthenticated,
     errorDataComment,
-    onAddNewComment,
-    onGetScream
+    onAddNewComment
+    // onGetScream
 }) => {
     const classes = useStyles();
-    const { screamIdParam } = useParams();
-    const [openDialog, setOpenDialog] = useState(false);
+    // const [openDialog, setOpenDialog] = useState(false);
 
     useEffect(() => {
-        if (screamIdParam) {
-            setOpenDialog(true);
-            onGetScream(screamIdParam);
+        if (openDlg) {
+            click();
         }
-    }, [onGetScream, screamIdParam]);
+    }, [openDlg, click]);
 
-    const handleClose = useCallback(() => {
-        setOpenDialog(false);
-    }, []);
+    // useEffect(() => {
+    //     if (openDlg) {
+    //         setOpenDialog(true);
+    //         onGetScream(screamId);
+    //     }
+    // }, [openDlg, onGetScream, screamId]);
 
-    const handleOpen = useCallback(() => {
-        console.log('handle open');
-        setOpenDialog(true);
-        onGetScream(screamId);
-    }, [onGetScream, screamId]);
+    // const handleClose = useCallback(() => {
+    //     setOpenDialog(false);
+    // }, []);
+
+    // const handleOpen = useCallback(() => {
+    //     setOpenDialog(true);
+    //     onGetScream(screamId);
+    // }, [onGetScream, screamId]);
 
     let dialogMarkup = loadingFetchDetail ? (
         <div className={classes.spinnerDiv}>
@@ -114,20 +122,15 @@ const ScreamDialog = ({
             <GrasButton
                 tip="Scream Detalis"
                 tipClassName={classes.detailsButton}
-                onClick={handleOpen}
+                onClick={click}
             >
                 <UnfoldMore color="primary" />
             </GrasButton>
-            <Dialog
-                open={openDialog}
-                onClose={handleClose}
-                fullWidth
-                maxWidth="sm"
-            >
+            <Dialog open={open} onClose={close} fullWidth maxWidth="sm">
                 <GrasButton
                     placement="top"
                     tip="Close"
-                    onClick={handleClose}
+                    onClick={close}
                     tipClassName={classes.closeButton}
                 >
                     <CloseIcon />
@@ -151,7 +154,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onGetScream: (id) => dispatch(actions.getScream(id)),
+        // onGetScream: (id) => dispatch(actions.getScream(id)),
         onAddNewComment: (id, data) => dispatch(actions.addNewComment(id, data))
     };
 };

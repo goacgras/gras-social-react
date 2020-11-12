@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import dayJs from 'dayjs';
@@ -29,14 +29,37 @@ const Scream = ({
         commentCount,
         screamId
     },
+    openDlg,
     isAuthenticated,
     credentials,
-    onDeleteScream
+    onDeleteScream,
+    onGetScream
 }) => {
     const classes = useStyles();
+    const [showDialog, setShowDialog] = useState(false);
+    const [oldPath, setOldPath] = useState('');
     dayJs.extend(relativeTime);
 
-    console.log('FROM SCREAM');
+    const dialogCloseHandler = () => {
+        window.history.pushState(null, null, oldPath);
+        setShowDialog(false);
+        console.log('from close');
+    };
+
+    const dialogOpenHandler = useCallback(() => {
+        let oldPath = window.location.pathname;
+        const newPath = `/user/${userHandle}/scream/${screamId}`;
+
+        if (oldPath === newPath) oldPath = `/user/${userHandle}`;
+        window.history.pushState(null, null, newPath);
+
+        setShowDialog(true);
+        setOldPath(oldPath);
+
+        onGetScream(screamId);
+
+        console.log('from open');
+    }, [screamId, onGetScream, userHandle]);
 
     const deleteButton =
         isAuthenticated && userHandle === credentials?.handle ? (
@@ -74,7 +97,14 @@ const Scream = ({
 
                 <span>{commentCount} comments</span>
 
-                <ScreamDialog screamId={screamId} userHandle={userHandle} />
+                <ScreamDialog
+                    screamId={screamId}
+                    userHandle={userHandle}
+                    openDlg={openDlg}
+                    open={showDialog}
+                    close={dialogCloseHandler}
+                    click={dialogOpenHandler}
+                />
             </CardContent>
         </Card>
     );
@@ -89,6 +119,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        onGetScream: (id) => dispatch(actions.getScream(id)),
         onDeleteScream: (id) => dispatch(actions.deleteScream(id))
     };
 };
